@@ -91,7 +91,7 @@ export default {
 .chat-box {
   position: absolute;
   width: 400px;
-  bottom: 80px;
+  bottom: 10px;
   right: 10px;
   min-height: 500px;
 }

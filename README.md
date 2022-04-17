@@ -1,5 +1,7 @@
 # live-code-share
 
+![alt text](<./sample/scree1.png>) 
+
 ## Project setup
 ```
 npm install

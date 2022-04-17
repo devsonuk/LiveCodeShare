@@ -31,7 +31,7 @@
     >
       <CodeEditor :height="mainContainerHeight" :socket="socket" />
     </div>
-    <v-btn
+    <!-- <v-btn
       class="mx-2"
       fab
       dark
@@ -39,7 +39,7 @@
       style="position: absolute; bottom: 20px; right: 20px"
     >
       <v-icon dark> mdi-chat </v-icon>
-    </v-btn>
+    </v-btn> -->
     <ChatBox :socket="socket" />
     <v-footer dark app color="rgb(0, 32, 42)">
       <div>This is the footer</div>
