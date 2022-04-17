@@ -1,6 +1,6 @@
 # live-code-share
 
-![alt text](<./sample/scree1.png>) 
+![alt text](<https://github.com/devsonuk/LiveCodeShare/blob/master/sample/screen1.png>) 
 
 ## Project setup
 ```
