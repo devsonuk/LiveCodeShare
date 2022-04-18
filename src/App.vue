@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar v-if="showNavigation" app color="dark" dark>
+    <v-app-bar id="navbar" v-if="showNavigation" app color="dark" dark>
       <div class="d-flex align-center">
         <v-img
           alt="Logo"
@@ -42,7 +42,7 @@ export default {
   name: "App",
   watch: {
     $route() {
-      if (this.$route.name == "Authentication") {
+      if (this.$route.name == "Login") {
         this.showNavigation = false;
       }
     },
