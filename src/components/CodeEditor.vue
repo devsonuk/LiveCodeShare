@@ -19,6 +19,7 @@ import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism-tomorrow.css";
+import { mapGetters } from "vuex";
 
 export default {
   name: "CodeEditor",
@@ -38,14 +39,18 @@ export default {
       }
     });
   },
+  computed: {
+    ...mapGetters(["getLoggedInUser"]),
+  },
   methods: {
     highlighter(code) {
       return highlight(code, languages.js); //returns html
     },
     updateCode() {
-      console.log("code", this.code);
-      var roomId = this.$route.params.roomId;
-      this.socket.emit("codeUpdated", { userId: 12, roomId, text: this.code });
+      this.socket.emit("codeUpdated", {
+        userId: this.getLoggedInUser.id,
+        text: this.code,
+      });
     },
   },
 };

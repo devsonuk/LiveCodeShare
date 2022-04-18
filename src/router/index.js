@@ -7,14 +7,32 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "home",
+    name: "Home",
     component: HomeView,
   },
   {
     path: "/editor/:roomId",
-    name: "editor",
+    name: "Editor",
     component: function () {
       return import(/* webpackChunkName: "editor" */ "../views/EditorView.vue");
+    },
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: function () {
+      return import(
+        /* webpackChunkName: "GuestLoginView" */ "../views/GuestLoginView.vue"
+      );
+    },
+  },
+  {
+    path: "/authentication",
+    name: "Authentication",
+    component: function () {
+      return import(
+        /* webpackChunkName: "Authentication" */ "../views/AuthenticationView.vue"
+      );
     },
   },
 ];
@@ -24,5 +42,17 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
+// const openRoutes = ["Login"];
+
+// router.beforeEach(async (to, from, next) => {
+//   var isAuthenticated = (await localStorage.getItem("isLoggedIn")) != null;
+//   console.log("isAuthenticated", isAuthenticated, openRoutes.includes(to.name));
+//   if (!openRoutes.includes(to.name) && !isAuthenticated) {
+//     next({ name: "Login", query: { roomId: to.params.roomId } });
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

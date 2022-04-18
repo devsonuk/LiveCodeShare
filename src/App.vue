@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="dark" dark>
+    <v-app-bar v-if="showNavigation" app color="dark" dark>
       <div class="d-flex align-center">
         <v-img
           alt="Logo"
@@ -20,7 +20,7 @@
           src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
           width="100"
         /> -->
-        <h4 class="display-1">Code Collaboration</h4>
+        <h6 class="display-1">Code Share</h6>
       </div>
 
       <v-spacer></v-spacer>
@@ -31,7 +31,7 @@
       </Poptip>
     </v-app-bar>
 
-    <v-main>
+    <v-main class="main-container">
       <router-view />
     </v-main>
   </v-app>
@@ -40,14 +40,26 @@
 <script>
 export default {
   name: "App",
-
+  watch: {
+    $route() {
+      if (this.$route.name == "Authentication") {
+        this.showNavigation = false;
+      }
+    },
+  },
   data: () => ({
-    //
+    showNavigation: true,
   }),
+  destroyed() {
+    localStorage.clear();
+  },
 };
 </script>
 
 <style scoped>
+.main-container {
+  background-color: #fafbfc;
+}
 .theme--dark.v-app-bar.v-toolbar.v-sheet {
   background-color: #003847;
   box-shadow: 0px 1px 1px -1px rgb(0 0 0 / 20%),

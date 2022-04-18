@@ -1,19 +1,25 @@
 <template>
   <div class="chat-box" v-show="showChatBox">
     <v-card class="mx-auto fill-height" width="100%">
-      <v-card-title class="pt-2 pb-2">Messaging</v-card-title>
+      <v-card-title class="pt-2 pb-2">
+        Messaging
+        <span style="position: absolute; right: 8px" @click="closeChatbox">
+          <v-icon>mdi-close</v-icon>
+        </span>
+      </v-card-title>
       <v-card-text class="chat-area">
         <v-container fluid style="padding: 0">
           <v-list disabled two-line style="background: transparent">
             <v-list-item-group>
               <v-list-item v-for="(item, i) in messages" :key="i">
-                <!-- <v-list-item-icon>
-                  <v-icon v-text="item.icon"></v-icon>
-                </v-list-item-icon> -->
-                <v-list-item-avatar>
+                <v-list-item-avatar v-if="item.avatar == 'bot'">
                   <v-img
-                    :src="'https://cdn.vuetifyjs.com/images/lists/2.jpg'"
+                    v-if="item.avatar == 'bot'"
+                    src="../assets/chatbot.png"
                   ></v-img>
+                </v-list-item-avatar>
+                <v-list-item-avatar v-else color="#003847">
+                  <span class="white--text text-h6">{{ item.avatar }}</span>
                 </v-list-item-avatar>
                 <v-list-item-content
                   style="
@@ -46,40 +52,41 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
-  props: ["socket"],
+  props: ["socket", "showChatBox"],
   data() {
     return {
-      showChatBox: true,
+      // showChatBox: true,
       messages: [],
       message: "",
     };
   },
   mounted() {
-    var username = "Sonu";
-    var roomId = this.$route.params.roomId;
-    this.socket.emit("joinRoom", { username, roomId });
-
     this.socket.on("message", (payload) => {
       if (payload.text) {
         this.messages.push(payload);
       }
-      console.log("Message Client", payload);
-    });
-
-    this.socket.on("roomUsers", (payload) => {
-      console.log(payload);
     });
   },
   updated() {
     var chatArea = document.querySelector(".chat-area");
     chatArea.scrollTop = chatArea.scrollHeight;
   },
+  computed: {
+    ...mapGetters(["getLoggedInUser"]),
+  },
   methods: {
+    closeChatbox() {
+      this.$emit("chatboxClosed");
+    },
     sendMessage() {
       //Emitting a event to server
       if (this.message != "" && this.message != "\n") {
-        this.socket.emit("chatMessage", { message: this.message });
+        this.socket.emit("chatMessage", {
+          userId: this.getLoggedInUser.id,
+          text: this.message,
+        });
         this.message = "";
       }
     },

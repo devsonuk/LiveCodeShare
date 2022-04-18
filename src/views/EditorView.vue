@@ -31,16 +31,22 @@
     >
       <CodeEditor :height="mainContainerHeight" :socket="socket" />
     </div>
-    <!-- <v-btn
+    <v-btn
+      v-show="showChatBox == false"
       class="mx-2"
       fab
       dark
       color="cyan"
       style="position: absolute; bottom: 20px; right: 20px"
+      @click="showChatBox = true"
     >
       <v-icon dark> mdi-chat </v-icon>
-    </v-btn> -->
-    <ChatBox :socket="socket" />
+    </v-btn>
+    <ChatBox
+      :socket="socket"
+      :showChatBox="showChatBox"
+      @chatboxClosed="showChatBox = false"
+    />
     <v-footer dark app color="rgb(0, 32, 42)">
       <div>This is the footer</div>
     </v-footer>
@@ -51,7 +57,7 @@
 import CodeEditor from "../components/CodeEditor.vue";
 import ChatBox from "../components/ChatBox.vue";
 import { io } from "socket.io-client";
-// const socket = io("http://localhost:3000/");
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -62,7 +68,12 @@ export default {
     return {
       mainContainerHeight: 0,
       socket: io("http://localhost:3000/"),
+      users: [],
+      showChatBox: false,
     };
+  },
+  computed: {
+    ...mapGetters(["getLoggedInUser"]),
   },
   methods: {
     setHeight() {
@@ -74,10 +85,27 @@ export default {
   },
   destroyed() {
     window.removeEventListener("resize", this.setHeight);
+    localStorage.clear();
+  },
+  beforeMount() {
+    console.log("beforeMount", this.getLoggedInUser);
+    if (this.getLoggedInUser.firstName == "") {
+      var roomId = this.$route.params.roomId;
+      this.$router.push({ name: "Login", query: { roomId: roomId } });
+    }
   },
   mounted() {
     window.addEventListener("resize", this.setHeight);
     this.setHeight();
+
+    //Sending request to server
+    this.socket.emit("joinRoom", this.getLoggedInUser);
+
+    //Receiving response from server
+    this.socket.on("roomUsers", (payload) => {
+      this.users = payload;
+      console.log("Connection established successfully.");
+    });
   },
 };
 </script>
